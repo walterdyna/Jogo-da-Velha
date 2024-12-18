@@ -1,115 +1,97 @@
-/* Reset e estilo base */
+/* Reseta o estilo padrão */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: cursive;
+  font-family: 'Arial', sans-serif;
 }
 
+/* Cursor personalizado */
 body {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #1a1a1a;
-  color: #fff;
+  cursor: url('./Img/Velha-Mouse.png'), auto;
 }
 
+/* Estilização principal */
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+  color: white;
 }
 
-/* Título com efeito neon */
 h1 {
   text-align: center;
-  font-size: 2.5rem;
-  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
-  animation: neon-glow 1.5s infinite alternate;
+  color: #fff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
 
-@keyframes neon-glow {
-  0% {
-    text-shadow: 0 0 5px #ff0, 0 0 10px #ff0, 0 0 20px #ff0, 0 0 30px #ff0;
-  }
-  100% {
-    text-shadow: 0 0 5px #f0f, 0 0 10px #f0f, 0 0 20px #f0f, 0 0 30px #f0f;
-  }
-}
-
-/* Linha horizontal */
 hr {
-  width: 100%;
+  font-weight: bold;
   height: 3px;
-  background: linear-gradient(90deg, #0ff, #f0f, #ff0);
+  background: linear-gradient(90deg, #f00, #0f0, #00f);
   border: none;
-  margin: 10px 0;
-  animation: neon-line 1.5s infinite alternate;
+  width: 100%;
 }
 
-@keyframes neon-line {
-  0% {
-    background-position: 0;
-  }
-  100% {
-    background-position: 100%;
-  }
-}
-
-/* Estilo do tabuleiro */
 .game {
-  position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  position: relative; /* Adicione esta linha */
 }
 
 .game button {
   width: 100px;
   height: 100px;
-  background: #1a1a1a;
-  border: 2px solid #fff;
-  color: #fff;
   font-size: 2.5rem;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 0 10px #0ff;
-  transition: box-shadow 0.5s, background-color 0.5s, border-color 0.5s;
+  color: #fff;
+  background: #1a1a1a;
+  border: 2px solid #333;
+  box-shadow: 0 0 5px #0ff;
+  cursor: url('./Img/Velha-Mouse.png'), auto; 
+  transition: transform 0.2s, background 0.2s;
 }
 
 .game button:hover {
-  box-shadow: 0 0 15px #0ff;
-  background: #333;
-  border-color: #0ff;
+  transform: scale(1.1);
 }
 
 /* Linha de vitória */
 .victory-line {
   position: absolute;
   height: 5px;
-  background: linear-gradient(90deg, #ff0, #f0f, #0ff);
-  animation: neon-line 1.5s infinite alternate;
-  display: none; /* Oculta até a vitória */
-  transform-origin: left center;
+  background: linear-gradient(90deg, #f00, #0f0, #00f);
+  border-radius: 5px;
+  display: none; /* Inicialmente escondida */
+  z-index: 10; /* Certifique-se de que a linha está acima dos botões */
 }
 
-/* Texto do jogador atual */
-.currentPlayer {
-  text-align: center;
-  font-size: 1.5rem;
-  color: #0ff;
-  text-shadow: 0 0 10px #0ff;
-  margin-top: 10px;
-}
-
-/* Mensagem final */
+/* Mensagem de fim */
 .message {
-  text-align: center;
   font-size: 1.5rem;
-  color: #ff0;
-  text-shadow: 0 0 10px #ff0;
+  text-shadow: 0 0 5px #fff;
+}
+
+/* Botão de reiniciar */
+.reset {
   margin-top: 10px;
-  animation: neon-glow 1.5s infinite alternate;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #0ff, #f0f, #ff0);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: url('./Img/Velha-Mouse.png'), auto; 
+  border-radius: 5px;
+  text-shadow: 0 0 5px #fff;
+  transition: background 0.3s;
+}
+
+.reset:hover {
+  background: linear-gradient(90deg, #ff0, #0ff, #f0f);
 }

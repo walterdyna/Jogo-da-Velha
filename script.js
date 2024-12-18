@@ -1,107 +1,110 @@
-const currentPlayer = document.querySelector(".currentPlayer");
+const buttons = document.querySelectorAll(".game button");
+const currentPlayerDisplay = document.querySelector(".currentPlayer");
+const messageDisplay = document.querySelector(".message");
+const resetButton = document.querySelector(".reset");
 const victoryLine = document.querySelector(".victory-line");
-const message = document.querySelector(".message");
-let selected;
-let player = "X";
 
-// Combinações vencedoras
-let positions = [
-  [1, 2, 3],
-  [4, 5, 6],
-  [7, 8, 9],
+let currentPlayer = 'X';
+let gameActive = true;
+let gameState = ["", "", "", "", "", "", "", "", ""];
+
+const winningConditions = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
   [1, 4, 7],
   [2, 5, 8],
-  [3, 6, 9],
-  [1, 5, 9],
-  [3, 5, 7],
+  [0, 4, 8],
+  [2, 4, 6]
 ];
 
-// Inicializa o jogo
-function init() {
-  selected = [];
-  player = "X";
-  currentPlayer.innerHTML = `JOGADOR DA VEZ: ${player}`;
-  message.innerHTML = ""; // Limpa mensagens anteriores
-  victoryLine.style.display = "none"; // Esconde linha de vitória
+function handleButtonClick(event) {
+  const clickedButton = event.target;
+  const clickedIndex = Array.from(buttons).indexOf(clickedButton);
 
-  document.querySelectorAll(".game button").forEach((item) => {
-    item.innerHTML = "";
-    item.disabled = false;
-    item.style.background = "#1a1a1a"; // Restaura o estilo inicial
-    item.addEventListener("click", newMove);
-  });
+  if (gameState[clickedIndex] !== "" || !gameActive) {
+    return;
+  }
+
+  gameState[clickedIndex] = currentPlayer;
+  clickedButton.textContent = currentPlayer;
+  checkResult();
 }
 
-init();
+function checkResult() {
+  let roundWon = false;
 
-// Função chamada ao clicar em um botão
-function newMove(e) {
-  const index = e.target.getAttribute("data-i");
-  e.target.innerHTML = player;
-  e.target.disabled = true; // Evita múltiplos cliques
-  selected[index] = player;
-
-  // Verifica o jogo após um pequeno atraso
-  setTimeout(() => {
-    check();
-  }, 100);
-
-  // Alterna entre os jogadores
-  player = player === "X" ? "O" : "X";
-  currentPlayer.innerHTML = `JOGADOR DA VEZ: ${player}`;
-}
-
-// Função para verificar a vitória ou empate
-function check() {
-  let playerLastMove = player === "X" ? "O" : "X";
-
-  const items = selected
-    .map((item, i) => [item, i])
-    .filter((item) => item[0] === playerLastMove)
-    .map((item) => parseInt(item[1]));
-
-  for (const pos of positions) {
-    if (pos.every((item) => items.includes(item))) {
-      drawVictoryLine(pos); // Desenha a linha da vitória
-      message.innerHTML = `O JOGADOR '${playerLastMove}' GANHOU!`;
-      disableButtons();
-      return;
+  for (let i = 0; i < winningConditions.length; i++) {
+    const [a, b, c] = winningConditions[i];
+    if (gameState[a] === "" || gameState[b] === "" || gameState[c] === "") {
+      continue;
+    }
+    if (gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+      roundWon = true;
+      drawVictoryLine(winningConditions[i]);
+      break;
     }
   }
 
-  if (selected.filter((item) => item).length === 9) {
-    message.innerHTML = "DEU EMPATE!";
+  if (roundWon) {
+    messageDisplay.textContent = `Jogador ${currentPlayer} ganhou!`;
+    gameActive = false;
+    resetButton.style.display = "block";
     return;
   }
+
+  if (!gameState.includes("")) {
+    messageDisplay.textContent = "Empate!";
+    resetButton.style.display = "block";
+    return;
+  }
+
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  currentPlayerDisplay.textContent = `Turno do jogador: ${currentPlayer}`;
 }
 
-// Desabilita os botões ao final do jogo
-function disableButtons() {
-  document.querySelectorAll(".game button").forEach((item) => {
-    item.disabled = true;
-  });
-}
-
-// Função para desenhar a linha de vitória
 function drawVictoryLine(pos) {
-  const buttons = document.querySelectorAll(".game button");
+  const startButton = buttons[pos[0]];
+  const endButton = buttons[pos[2]];
 
-  // Coordenadas do botão inicial e final
-  const startButton = buttons[pos[0] - 1];
-  const endButton = buttons[pos[2] - 1];
-
+  // Calcula as coordenadas do centro dos botões
   const startX = startButton.offsetLeft + startButton.offsetWidth / 2;
   const startY = startButton.offsetTop + startButton.offsetHeight / 2;
   const endX = endButton.offsetLeft + endButton.offsetWidth / 2;
   const endY = endButton.offsetTop + endButton.offsetHeight / 2;
 
-  // Configura a linha de vitória
+  // Calcula o comprimento e o ângulo da linha
+  const lineLength = Math.hypot(endX - startX, endY - startY);
+  const angle = Math.atan2(endY - startY, endX - startX);
+
+  // Define a linha de vitória
   victoryLine.style.display = "block";
-  victoryLine.style.width = `${Math.hypot(endX - startX, endY - startY)}px`;
-  victoryLine.style.transform = `rotate(${Math.atan2(
-    endY - startY,
-    endX - startX
-  )}rad)`;
-  victoryLine.style.left = `${startX}px`;
-  victoryLine.style.top = `${startY}px`;
+  victoryLine.style.width = `${lineLength}px`;
+
+  // Calcula o ponto médio entre os botões
+  const midX = (startX + endX) / 2;
+  const midY = (startY + endY) / 2;
+
+  // Adiciona um deslocamento para centralizar a linha
+  const totalOffset = currentPlayerDisplay.offsetHeight + messageDisplay.offsetHeight + resetButton.offsetHeight + 40; // Ajuste o valor conforme necessário
+
+  victoryLine.style.transform = `translate(${midX - lineLength / 2}px, ${midY + totalOffset}px) rotate(${angle}rad)`;
 }
+
+function handleResetButton() {
+  gameActive = true;
+  resetButton.style.display = "none";
+  gameState = ["", "", "", "", "", "", "", "", ""];
+  currentPlayer = 'X';
+  currentPlayerDisplay.textContent = `Turno do jogador: ${currentPlayer}`;
+  messageDisplay.textContent = "";
+  buttons.forEach(button => {
+    button.textContent = "";
+  });
+  victoryLine.style.display = "none"; // Esconder a linha de vitória
+}
+
+buttons.forEach(button => button.addEventListener("click", handleButtonClick));
+resetButton.addEventListener("click", handleResetButton);
+currentPlayerDisplay.textContent = `Turno do jogador: ${currentPlayer}`;
