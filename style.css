@@ -95,3 +95,52 @@ hr {
 .reset:hover {
   background: linear-gradient(90deg, #ff0, #0ff, #f0f);
 }
+
+/* Media query para dispositivos pequenos (smartphones) */
+@media (max-width: 600px) {
+  body {
+    flex-direction: column; /* Altera a direção do flex para coluna */
+  }
+
+  main {
+    margin-bottom: 20px; /* Adiciona espaço abaixo do main */
+  }
+
+  img {
+    width: 150px; /* Define a largura da imagem para 30px */
+    margin-top: 20px; /* Adiciona margem superior para deslocar a imagem para cima */
+  }
+
+  .game button {
+    width: 80px; /* Ajusta o tamanho dos botões */
+    height: 80px;
+    font-size: 2rem; /* Ajusta o tamanho da fonte */
+  }
+
+  .message, .currentPlayer {
+    font-size: 1.2rem; /* Ajusta o tamanho da fonte das mensagens */
+  }
+
+  .reset {
+    font-size: 1rem; /* Ajusta o tamanho do botão de reiniciar */
+  }
+}
+
+/* Media query para dispositivos médios (tablets) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .game button {
+    width: 90px; /* Ajusta o tamanho dos botões */
+    height: 90px;
+    font-size: 2.2rem; /* Ajusta o tamanho da fonte */
+  }
+
+  .message, .currentPlayer {
+    font-size: 1.4rem; /* Ajusta o tamanho da fonte das mensagens */
+  }
+
+  .reset {
+    font-size: 1.1rem; /* Ajusta o tamanho do botão de reiniciar */
+  }
+}
+
+/* Media query para dispositivos grandes (desktops) */
