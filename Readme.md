@@ -62,6 +62,7 @@ Para dúvidas ou sugestões, entre em contato:
 
 Nome: Walter Dyna
 Email: wdyna@hotmail.com
+Link: https://jogo-da-velha-dyna.netlify.app/
 
 
 ### Observações:
